@@ -1,0 +1,1 @@
+worker: python movies-recommendations-bot.py
