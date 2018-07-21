@@ -86,6 +86,12 @@ def process_status(status):
     if status.in_reply_to_status_id and status.in_reply_to_screen_name != BOT_SCREEN_NAME:
         return
 
+    # If the status is a reply to a recommendation, but the authors differ, ignore the tweet.
+    if status.in_reply_to_status_id and status.in_reply_to_screen_name == BOT_SCREEN_NAME:
+        previous_tweet = api.get_status(status.in_reply_to_status_id_str)
+        if previous_tweet.in_reply_to_screen_name != status.author.screen_name:
+            return
+
     # Retrieve hashtags from the tweet. Discard any that doesn't exist in the genre list.
     hashtag_list = [GENRES[x['text']] for x in status.entities['hashtags'] if x['text'] in GENRES.keys()]
 
